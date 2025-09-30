@@ -1,0 +1,264 @@
+--------------------------------------------------------
+-- 📌 CREATE CUSTOMERS TABLE & INSERT DATA
+--------------------------------------------------------
+CREATE TABLE Customers (
+    customer_id NUMBER PRIMARY KEY,
+    name VARCHAR2(50),
+    city VARCHAR2(50),
+    email VARCHAR2(100),
+    dob DATE
+);
+
+INSERT INTO Customers VALUES (1, 'Rajesh Kumar', 'Bangalore', 'rajesh@gmail.com', DATE '1995-06-15');
+INSERT INTO Customers VALUES (2, 'Amit Sharma', 'Delhi', 'amit@yahoo.com', DATE '1992-09-20');
+INSERT INTO Customers VALUES (3, 'Priya Verma', 'Mumbai', 'priya@gmail.com', DATE '1998-02-10');
+INSERT INTO Customers VALUES (4, 'John Mathew', 'Bangalore', 'john@gmail.com', DATE '1990-12-05');
+INSERT INTO Customers VALUES (5, 'Sara Ali', 'Pune', 'sara@hotmail.com', DATE '1997-03-22');
+INSERT INTO Customers VALUES (6, 'Neha Gupta', 'Bangalore', 'neha@gmail.com', DATE '1996-07-11');
+INSERT INTO Customers VALUES (7, 'David Das', 'Chennai', 'david@yahoo.com', DATE '1991-11-30');
+
+--------------------------------------------------------
+-- 📌 CREATE PRODUCTS TABLE & INSERT DATA
+--------------------------------------------------------
+CREATE TABLE Products (
+    product_id NUMBER PRIMARY KEY,
+    product_name VARCHAR2(50),
+    Eategory VARCHAR2(30),
+    price NUMBER(10,2),
+    stock NUMBER,
+    rating NUMBER(2,1)
+);
+
+INSERT INTO Products VALUES (101, 'Laptop', 'Electronics', 55000, 10, 4.5);
+INSERT INTO Products VALUES (102, 'Mobile', 'Electronics', 25000, 0, 4.3);
+INSERT INTO Products VALUES (103, 'Shoes', 'Fashion', 3000, 25, 3.8);
+INSERT INTO Products VALUES (104, 'Washing Machine', 'Home Appliances', 32000, 5, 4.6);
+INSERT INTO Products VALUES (105, 'Headphones', 'Electronics', 1500, 40, 4.1);
+INSERT INTO Products VALUES (106, 'Shirt', 'Fashion', 1200, 0, 4.2);
+INSERT INTO Products VALUES (107, 'Refrigerator', 'Home Appliances', 45000, 7, 4.7);
+
+--------------------------------------------------------
+-- 📌 CREATE EMPLOYEES TABLE & INSERT DATA
+--------------------------------------------------------
+CREATE TABLE Employes (
+    emp_id       NUMBER,
+    first_name   VARCHAR2(50),
+    last_name    VARCHAR2(50),
+    department_id NUMBER,
+    city         VARCHAR2(50),
+    salary       NUMBER(10,2),
+    joining_date DATE,
+    birth_date   DATE
+);
+
+INSERT INTO Employes VALUES (1001, 'Amit', 'Sharma', 101, 'Delhi', 85000, DATE '2022-05-10', DATE '1995-03-15');
+INSERT INTO Employes VALUES (1002, 'Priya', 'Verma', 101, 'Mumbai', 60000, DATE '2021-07-20', DATE '1998-08-20');
+INSERT INTO Employes VALUES (1003, 'Rahul', 'Singh', 102, 'Delhi', 95000, DATE '2023-01-12', DATE '1994-11-11');
+INSERT INTO Employes VALUES (1004, 'Sneha', 'Kapoor', 103, 'Pune', 72000, DATE '2020-03-18', DATE '1996-01-05');
+INSERT INTO Employes VALUES (1005, 'Vikram', 'Patel', NULL, 'Bangalore', 50000, DATE '2019-10-22', DATE '1992-09-09');
+
+--------------------------------------------------------
+-- 📌 CREATE ORDERS TABLE & INSERT DATA
+--------------------------------------------------------
+CREATE TABLE Orderes (
+    order_id NUMBER,
+    customer_id NUMBER,
+    product_id NUMBER,
+    emp_id NUMBER,
+    order_date DATE,
+    delivery_date DATE,
+    amount NUMBER(10,2)
+);
+
+INSERT INTO Orderes VALUES (301, 102, 3, 203, DATE '2023-08-03', DATE '2023-08-07', 55000);
+INSERT INTO Orderes VALUES (302, 102, 2, 202, DATE '2023-08-05', DATE '2023-08-10', 20000);
+INSERT INTO Orderes VALUES (303, 103, 3, 203, DATE '2023-08-08', DATE '2023-08-15', 2500);
+INSERT INTO Orderes VALUES (304, 104, 4, 204, DATE '2023-08-12', DATE '2023-08-18', 7000);
+INSERT INTO Orderes VALUES (305, 105, 5, 205, DATE '2023-08-15', DATE '2023-08-20', 1500);
+INSERT INTO Orderes VALUES (306, 105, 2, 202, DATE '2023-08-20', DATE '2023-08-25', 20000);
+INSERT INTO Orderes VALUES (307, 102, 6, 201, DATE '2023-08-25', DATE '2023-08-28', 55000);
+
+--------------------------------------------------------
+-- 📌 BASIC SELECT & WHERE QUERIES
+--------------------------------------------------------
+
+-- 1. Select all columns from Orders
+SELECT * FROM Orderes;
+
+-- 2. Select product name & price from Products
+SELECT product_name, price FROM Products;
+
+-- 3. Select employees where salary < 60000
+SELECT * FROM Employes WHERE salary < 60000;
+
+-- 4. Select customers from Bangalore
+SELECT * FROM Customers WHERE city = 'Bangalore';
+
+-- 5. Select products that are out of stock
+SELECT product_name, Eategory FROM Products WHERE stock = 0;
+
+--------------------------------------------------------
+-- 📌 ORDER BY & DISTINCT
+--------------------------------------------------------
+
+-- 6. Employees sorted by first_name (descending)
+SELECT first_name FROM Employes ORDER BY first_name DESC;
+
+-- 7. Unique cities of customers
+SELECT DISTINCT city FROM Customers;
+
+-- 8. Top 5 orders by highest amount
+SELECT order_id, amount
+FROM Orderes
+ORDER BY amount DESC
+FETCH FIRST 5 ROWS ONLY;
+
+-- 9. Last 3 joined employees
+SELECT first_name, joining_date
+FROM Employes
+ORDER BY joining_date DESC
+FETCH FIRST 3 ROWS ONLY;
+
+-- 10. Products ordered by name, then price
+SELECT * FROM Products ORDER BY product_name, price;
+
+--------------------------------------------------------
+-- 📌 AGGREGATE FUNCTIONS
+--------------------------------------------------------
+
+-- 11. Count total customers
+SELECT COUNT(customer_id) AS total_customers FROM Customers;
+
+-- 12. Total number of orders placed
+SELECT COUNT(order_id) AS total_orders FROM Orderes;
+
+-- 13. Total revenue (sum of amount)
+SELECT SUM(amount) AS total_revenue FROM Orderes;
+
+-- 14. Highest salary in employees
+SELECT first_name, salary
+FROM Employes
+WHERE salary = (SELECT MAX(salary) FROM Employes);
+
+-- 15. Lowest product price
+SELECT product_name, price
+FROM Products
+WHERE price = (SELECT MIN(price) FROM Products);
+
+-- 16. Average price of products
+SELECT AVG(price) AS average_price FROM Products;
+
+--------------------------------------------------------
+-- 📌 GROUP BY & HAVING
+--------------------------------------------------------
+
+-- 19. Count employees per city
+SELECT city, COUNT(emp_id) AS total_employees
+FROM Employes
+GROUP BY city;
+
+-- 20. Max order amount per customer
+SELECT customer_id, MAX(amount) AS max_order_amount
+FROM Orderes
+GROUP BY customer_id;
+
+-- 21. Average salary per city
+SELECT city, AVG(salary) AS avg_salary
+FROM Employes
+GROUP BY city;
+
+-- 22. Number of employees per department
+SELECT department_id, COUNT(emp_id) AS emp_count
+FROM Employes
+GROUP BY department_id;
+
+-- 23. Total sales per product
+SELECT product_id, SUM(amount) AS total_sales
+FROM Orderes
+GROUP BY product_id;
+
+-- 24. Customers who spent more than 50,000
+SELECT customer_id, SUM(amount) AS total_spent
+FROM Orderes
+GROUP BY customer_id
+HAVING SUM(amount) > 50000;
+
+-- 25. Departments having more than 1 employee
+SELECT department_id, COUNT(emp_id) AS emp_count
+FROM Employes
+GROUP BY department_id
+HAVING COUNT(emp_id) > 1;
+
+-- 26. Cities with more than 1 customer
+SELECT city, COUNT(name) AS total_customers
+FROM Customers
+GROUP BY city
+HAVING COUNT(name) > 1;
+
+-- 27. Products with avg rating > 4
+SELECT product_name, AVG(rating) AS avg_rating
+FROM Products
+GROUP BY product_name
+HAVING AVG(rating) > 4;
+
+-- 28. Total salary per department where > 80000
+SELECT department_id, SUM(salary) AS total_salary
+FROM Employes
+GROUP BY department_id
+HAVING SUM(salary) > 80000;
+
+--------------------------------------------------------
+-- 📌 JOINS (INNER, LEFT, RIGHT)
+--------------------------------------------------------
+
+-- 32. Get employees & their orders (LEFT JOIN)
+SELECT E.emp_id, E.first_name, E.last_name, P.product_name, O.order_date, O.delivery_date
+FROM Employes E
+LEFT JOIN Orderes O ON E.emp_id = O.emp_id
+LEFT JOIN Products P ON O.product_id = P.product_id;
+
+-- 33. Get all orders & their employees (RIGHT JOIN)
+SELECT O.order_id, O.order_date, O.delivery_date, O.amount,
+       E.emp_id, E.first_name, E.last_name
+FROM Employes E
+RIGHT JOIN Orderes O ON E.emp_id = O.emp_id;
+
+--------------------------------------------------------
+-- 📌 STRING FUNCTIONS
+--------------------------------------------------------
+
+-- 41. Convert all employee names to lowercase
+SELECT LOWER(first_name || ' ' || last_name) AS full_name FROM Employes;
+
+-- 42. Get length of each employee's first name
+SELECT first_name, LENGTH(first_name) AS name_length FROM Employes;
+
+-- 43. First 5 characters of product name
+SELECT SUBSTR(product_name, 1, 5) AS short_name FROM Products;
+
+-- 44. Replace text in category names (example)
+SELECT REPLACE(Eategory, 'cs', 'ecs') FROM Products;
+
+-- 45. Employees whose name ends with 'a'
+SELECT first_name FROM Employes WHERE first_name LIKE '%a';
+
+--------------------------------------------------------
+-- 📌 DATE FUNCTIONS
+--------------------------------------------------------
+
+-- 46. Orders placed today
+SELECT * FROM Orderes WHERE order_date = TRUNC(SYSDATE);
+
+-- 47. Employees who joined in October
+SELECT first_name, joining_date
+FROM Employes
+WHERE TO_CHAR(joining_date, 'MM') = '10';
+
+-- 49. Employees whose birthday is this month
+SELECT first_name, birth_date
+FROM Employes
+WHERE TO_CHAR(birth_date, 'MM') = TO_CHAR(SYSDATE, 'MM');
+
+-- 50. Difference in days between order_date & delivery_date
+SELECT order_id, order_date, delivery_date, delivery_date - order_date AS difference_in_days
+FROM Orderes;
